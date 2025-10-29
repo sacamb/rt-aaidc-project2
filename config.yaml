@@ -1,0 +1,142 @@
+# Destination Compass Configuration
+# This file contains all configuration parameters for the Destination Compass application
+
+# API Keys (set these as environment variables)
+api_keys:
+  groq: "${GROQ_API_KEY}"
+  news: "${NEWS_API_KEY}"
+  openweather: "${OPENWEATHER_API_KEY}"
+  tavily: "${TAVILY_API_KEY}"
+  nominatim_user_agent: "${NOMINATIM_USER_AGENT}"
+  langsmith: "${LANGSMITH_API_KEY}"
+
+# LLM Configuration
+llm:
+  model: "llama-3.1-8b-instant"
+  temperature:
+    location_extraction: 0
+    report_generation: 0.3
+  timeout: 30
+
+# LangSmith Configuration
+langsmith:
+  enabled: "${LANGSMITH_TRACING}"
+  api_key: "${LANGSMITH_API_KEY}"
+  project: "destination-compass"
+  endpoint: "https://api.smith.langchain.com"
+  tracing: true
+  tags:
+    - "destination-compass"
+    - "langgraph"
+    - "production"
+
+
+# API Configuration
+apis:
+  # Geocoding (OpenStreetMap Nominatim)
+  geocoding:
+    base_url: "https://nominatim.openstreetmap.org/search"
+    timeout: 10
+    user_agent: "destination-compass/0.1 (contact: example@example.com)"
+    params:
+      format: "json"
+      addressdetails: 1
+      limit: 1
+
+  # Time API (Open-Meteo)
+  time:
+    base_url: "https://api.open-meteo.com/v1/forecast"
+    timeout: 10
+    params:
+      current: "temperature_2m"
+      timezone: "auto"
+
+  # Weather API (OpenWeatherMap)
+  weather:
+    base_url: "https://api.openweathermap.org/data/2.5/weather"
+    timeout: 10
+    units: "metric"
+
+  # News API
+  news:
+    base_url: "https://newsapi.org/v2"
+    timeout: 10
+    endpoints:
+      everything: "/everything"
+      headlines: "/top-headlines"
+    params:
+      sortBy: "publishedAt"
+      pageSize: 5
+      language: "en"
+    limits:
+      max_articles: 3
+
+  # Events API (Tavily)
+  events:
+    base_url: "https://api.tavily.com/search"
+    timeout: 10
+    search_depth: "basic"
+    max_results: 5
+    include_domains:
+      - "eventbrite.com"
+      - "meetup.com"
+      - "timeout.com"
+      - "ticketmaster.com"
+    exclude_domains: []
+
+# Application Settings
+app:
+  # LangGraph Configuration
+  langgraph:
+    checkpointer: "memory"
+    thread_id: "1"
+  
+  # Gradio Interface
+  gradio:
+    interface_type: "messages"
+    title: "Destination Compass"
+    description: "Get comprehensive destination information including weather, news, and events"
+    streaming: true
+    share: false
+    debug: false
+    show_error: true
+
+# Data Processing
+data_processing:
+  # Event parsing patterns
+  event_patterns:
+    date_patterns:
+      - "(\\d{1,2}/\\d{1,2}/\\d{4})"  # MM/DD/YYYY
+      - "(\\d{1,2}-\\d{1,2}-\\d{4})"  # MM-DD-YYYY
+      - "(January|February|March|April|May|June|July|August|September|October|November|December)\\s+\\d{1,2}"  # Month Day
+    venue_patterns:
+      - "at\\s+([A-Z][^,]+)"  # "at Venue Name"
+      - "@\\s+([A-Z][^,]+)"   # "@ Venue Name"
+      - "venue[:\\s]+([A-Z][^,]+)"  # "venue: Venue Name"
+  
+  # Content limits
+  limits:
+    max_events: 5
+    max_news_articles: 3
+    description_length: 100
+    content_preview_length: 200
+
+# Error Messages
+error_messages:
+  api_key_not_configured: "API key not configured"
+  no_location_data: "No location data"
+  no_valid_location: "No valid location for events"
+  temporarily_unavailable: "temporarily unavailable"
+  no_events_found: "No events found for {location}"
+  no_news_available: "No recent news available"
+  no_upcoming_events: "No upcoming events found"
+
+# Default Values
+defaults:
+  location: "Unknown"
+  country: "Unknown"
+  temperature: 0
+  date: "TBD"
+  venue: "TBD"
+  description: ""
+  url: ""

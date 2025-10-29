@@ -1,0 +1,13 @@
+groq==0.31.1
+langchain==0.3.27
+langchain-community==0.3.27
+langchain-core==0.3.76
+langchain-google-genai==2.1.10
+langchain-groq==0.3.8
+langchain-openai==0.3.33
+langchain-text-splitters==0.3.11
+langgraph==1.0.1
+langsmith==0.4.27
+numpy==2.3.3
+gradio==5.49.1
+PyYAML==6.0.1
