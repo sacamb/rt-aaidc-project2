@@ -1,4 +1,5 @@
-# Destination Compass 🌍
+# Multi-Agent Real-Time Destination Intelligence with LangGraph
+## Destination Compass 🌍
 
 A comprehensive destination information chatbot that provides real-time weather, news, events, and local time for any location worldwide. Built with LangGraph for workflow orchestration and multiple APIs for data collection.
 
@@ -19,6 +20,73 @@ A comprehensive destination information chatbot that provides real-time weather,
 **Date:** October 29, 2025
 
 **Description:** This project is part of the ReadyTensor AAIDC (Agentic AI Developer Certification) curriculum, designed as a multi-agent system using LangGraph as the orchestration framework.
+
+## Agent Description
+### Agent 1: Query Orchestrator Agent (Supervisor)
+Role: Central coordinator and decision-maker
+
+Responsibilities:
+- Receive natural language queries from users
+- Parse and extract destination entity from query text
+- Classify query intent (weather, news, events, local time, or general information)
+- Route to appropriate specialized agents based on classification
+- Aggregate results from all worker agents
+- Generate coherent final response
+
+Key Capabilities:
+
+- Intent classification using LLM (Groq)
+- Conditional routing logic based on query analysis
+- Result aggregation and synthesis
+- Timeout management for worker agents
+- Error detection and fallback handling
+- Communication Pattern: Supervisor receives user input → determines requirements → broadcasts task assignments to worker agents → collects responses → produces final response
+
+### Agents 2-5: Distributed Data Collector Agents (Parallel Workers)
+There are four specialized agents that operate independently but in parallel:
+
+#### Weather Agent
+Purpose: Fetch real-time weather conditions for destination
+API Integration: OpenWeatherMap API
+Data Returned: Temperature, conditions, forecast, humidity, wind speed
+Execution: Independent, asynchronous API call
+
+#### News Agent
+Purpose: Retrieve current news and events for destination
+API Integration: NewsAPI
+Data Returned: Recent headlines, articles, publications, dates
+Execution: Independent, asynchronous API call
+
+#### Events Agent
+Purpose: Discover local events and activities
+API Integration: Tavily Search API
+Data Returned: Event names, dates, times, descriptions, locations
+Execution: Independent, asynchronous API call
+
+#### Location Agent
+Purpose: Geocode destination and determine local time
+Capabilities: Latitude/longitude lookup, timezone determination, local time calculation
+Data Returned: Coordinates, timezone offset, current local time
+Execution: Independent computation
+
+#### Collective Characteristics:
+- Execute in parallel (not sequentially) for performance
+- Each agent maintains error handling and retry logic
+- Timeout protection: if one agent is slow, others complete
+- Return structured, typed responses (Pydantic models)
+- Include metadata: source API, timestamp, confidence level
+
+### Agent Communication
+The system uses structured message passing via LangGraph's StateGraph.
+
+#### Communication Pattern:
+Each worker agent receives a message, extracts relevant parameters, executes its assigned task. and returns structured response within timeout window
+
+#### State Management:
+This is achieved via a LangGraph centralized state object (StateGraph) that all agents can read and write to.
+
+## System Diagram
+![System Diagram](image_URL "Tooltip text")
 
 ## Quick Start
 
