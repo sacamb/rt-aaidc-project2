@@ -22,6 +22,7 @@ A comprehensive destination information chatbot that provides real-time weather,
 **Description:** This project is part of the ReadyTensor AAIDC (Agentic AI Developer Certification) curriculum, designed as a multi-agent system using LangGraph as the orchestration framework.
 
 ## Agent Description
+
 ### Agent 1: Query Orchestrator Agent (Supervisor)
 Role: Central coordinator and decision-maker
 
@@ -86,7 +87,7 @@ Each worker agent receives a message, extracts relevant parameters, executes its
 This is achieved via a LangGraph centralized state object (StateGraph) that all agents can read and write to.
 
 ## System Diagram
-![System Diagram](image_URL "Tooltip text")
+![Destination Compass System Diagram](docs\images\readytensor-project2-diagram.png "Destination Compass System Diagram")
 
 ## Quick Start
 
@@ -248,6 +249,45 @@ rt-aaidc-project2/
 2. Set `LANGSMITH_API_KEY` in your `.env` file
 3. Set `LANGSMITH_TRACING=true` in your `.env` file
 4. View traces in the LangSmith dashboard
+
+## Testing
+
+The project includes comprehensive tests with mocked external API calls.
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src --cov-report=html
+
+# Run specific test categories
+pytest tests/unit/          # Unit tests only
+pytest tests/integration/   # Integration tests only
+```
+
+### Test Structure
+
+- **Unit Tests** (`tests/unit/`): Test individual services in isolation
+  - GeocodingService, WeatherService, NewsService, EventsService, TimeService, LLMService
+- **Integration Tests** (`tests/integration/`): Test complete workflow
+  - Full workflow execution
+  - Edge cases and error scenarios
+  - API failure resilience
+
+### Test Features
+
+- ✅ All external API calls are mocked (no API keys needed for testing)
+- ✅ Edge case testing (invalid locations, API failures, timeouts)
+- ✅ Error handling validation
+- ✅ Coverage reporting
+
+See [tests/README.md](tests/README.md) for detailed testing documentation.
 
 ## Troubleshooting
 
